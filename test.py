@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 from mindmap_leaf import MindMapLeaf
 from mindmap_composite import MindMapComposite
+from jinja2 import Environment, FileSystemLoader
+
+def get_mind_map_html(root):
+    env = Environment(loader=FileSystemLoader('.'))
+    template = env.get_template('templates/mindmap.j2')
+    output = template.render(mindmap = root.get_str())
+    return output
 
 def main():
     if __name__ == "__main__":
@@ -55,7 +62,20 @@ def main():
         stage_directions.add( MindMapLeaf( "Tense bridge scenes as the crew works together", "plain" ) )
         root.add( stage_directions )
 
-        root.display()
+        #root.display()
+        #print(root.get_str())
+
+        daniel_tiger = MindMapComposite("Daniel Tiger", 'cloud')
+        phrases = MindMapComposite("Phrases", 'hexagon')
+        phrases.add(MindMapLeaf("Grr-ific!", 'plain'))
+        phrases.add(MindMapLeaf("Tiger-tastic!", 'plain'))
+        daniel_tiger.add(phrases)
+        friends = MindMapComposite("Friends", 'bang')
+        friends.add(MindMapLeaf("Prince Wednesday", 'plain'))
+        daniel_tiger.add(friends)
+
+        with open('./mindmaps/worf359.html', 'w') as file:
+            file.write(get_mind_map_html(daniel_tiger))
 
 
 if __name__ == "__main__":

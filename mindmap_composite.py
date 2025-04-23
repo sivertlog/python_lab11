@@ -37,5 +37,35 @@ class MindMapComposite:
         for child in self.children:
             child.display(indent + 2)
 
+    def get_str(self, indent=0):
+        result = ''
+        if indent == 0:
+            result += "mindmap  root"
+            result += ' ' * indent + str(self) + os.linesep
+            indent += 2
+        else:
+            result += ' ' * indent + str(self) + os.linesep
+        for child in self.children:
+            result += str(child.get_str(indent + 2))
+        return result
+
     def __str__(self):
         return self.get_shape_representation().format(self.name)
+
+def main():
+    from mindmap_leaf import MindMapLeaf
+    root = MindMapComposite("The Battle at Wolf 359", "circle")
+
+    characters = MindMapComposite("Characters", "oval")
+    characters.add(MindMapLeaf("Jean-Luc Picard / Locutus", "plain"))
+    characters.add(MindMapLeaf("William Riker", "plain"))
+    characters.add(MindMapLeaf("Data", "plain"))
+    characters.add(MindMapLeaf("Worf", "plain"))
+    characters.add(MindMapLeaf("Borg Queen (implied presence)", "plain"))
+    root.add(characters)
+
+    root.display()
+    print(root.get_str())
+
+if __name__ == '__main__':
+    main()
